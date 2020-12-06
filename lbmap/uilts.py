@@ -24,7 +24,7 @@ def savefig(fig: plt.Figure, fname='figure.png'):
 def basemap(fig: plt.Figure):
     ax = fig.add_axes(stylesheet.map_frame, projection=ccrs.EqualEarth())
     ax.set_global()
-    img = plt.imread(r'\Users\liamb\Downloads\GRAY_LR_SR_W\GRAY_LR_SR_W\GRAY_LR_SR_W.tif')
+    img = plt.imread(r'/GRAY_LR_SR_W.tif')
     img = skimage.transform.resize(img, (img.shape[0] // 8, img.shape[1] // 8),
                            anti_aliasing=True)
     img_extent=(-180, 180, -90, 90)
@@ -124,7 +124,7 @@ def legend(fig):
 
 if __name__ == '__main__':
     import xarray as xr
-    ds = xr.open_dataset(r'\Users\liamb\Downloads\test2.nc4')
+    ds = xr.open_dataset(r'test.nc4')
     from palettable.colorbrewer.sequential import BuPu_8
     import matplotlib.colors
     cmaplist = np.array(BuPu_8.colors)

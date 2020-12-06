@@ -1,4 +1,4 @@
-import seaborn as sns
+#import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.colors
 import numpy as np
@@ -16,10 +16,19 @@ def get_rect(anchor_x, anchor_y, width, height, anchor='center'):
         raise NotImplemented(f'anchor: "{anchor}" is not implemented')
     return [x0, y0, width, height]
 
-def make_cmap_transparent(cm):
-    cmaplist = np.array(cm.colors)
+def make_cmap_transparent(cm=None, color=None, alpha_min=0, alpha_max=1):
+    if cm is None:
+        cmaplist = np.ndarray((3, 500))
+        color = matplotlib.colors.to_rgb(color)
+        cmaplist[0,:] = color[0]
+        cmaplist[1,:] = color[1]
+        cmaplist[2,:] = color[2]
+        cmaplist = cmaplist.transpose()*255
+    else:
+        cmaplist = cm.mpl_colormap(np.linspace(0, 1, 500))[:,:3]*255
+        #cmaplist = np.array(cm.colors)
     cmaplist = np.concatenate(
-        [cmaplist.transpose() / 255, np.linspace(0, 0.8, cmaplist.shape[0])[:, np.newaxis].transpose()]).transpose()
+        [cmaplist.transpose() / 255, np.linspace(alpha_min, alpha_max, cmaplist.shape[0])[:, np.newaxis].transpose()]).transpose()
     cmaplist[:3, -1] = 0
     #cmaplist[3:, -1] = 1
     cmap = matplotlib.colors.LinearSegmentedColormap.from_list('foo', cmaplist.tolist(), N=256)
@@ -35,6 +44,16 @@ dark_palette_1 = dotdict(
     text1='#919191',
     text2='#9b9b9b',
     cmap='Oranges', #sns.color_palette("YlOrBr", as_cmap=True),
+    primary='#919191',
+
+)
+
+foo1 = dotdict(
+    background='#0e0e0e',
+    text1='#919191',
+    text2='#9b9b9b',
+    # cmap=make_cmap_transparent(color='Orange'),
+    cmap=make_cmap_transparent(palettable.colorbrewer.sequential.Oranges_9),
     primary='#919191',
 
 )
@@ -84,3 +103,9 @@ dark_stylesheet = dotdict(
     ],
     multi_cbar_ticks=[0, 0.125, 0.25],
 )
+
+if __name__ == '__main__':
+    import lbmap.colors
+
+    lbmap.colors.dummy_panel(foo1)
+    plt.show()

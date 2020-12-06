@@ -2,7 +2,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.cm
 
-def draw_cax(cax, cmap='viridis', norm=None, **colorbar_kwargs):
+def draw_cax(cax, cmap='viridis', norm=None, background=None, **colorbar_kwargs):
     colorbar_kwargs.setdefault('orientation', 'horizontal')
     if norm is None:
         norm = plt.Normalize(0, 1)
@@ -13,6 +13,12 @@ def draw_cax(cax, cmap='viridis', norm=None, **colorbar_kwargs):
         **colorbar_kwargs
     )
     cb.solids.set_edgecolor("face")
+    if background is not None:
+        # cax.set_facecolor(background)
+        cb.outline.set_edgecolor('white')
+        cb.patch.set_facecolor(background)
+        # cb.patch.set_alpha(0.5)
+        cb.solids.set_edgecolor("face")
     return cb
 
 def get_rect(anchor_x, anchor_y, width, height, anchor='center'):
@@ -39,8 +45,8 @@ def dummy_panel(palette):
     ax.set_facecolor(palette.background)
     rect = get_rect(0.5, 0.25, 0.9, 0.4, anchor='center')
     cax = fig.add_axes(rect)
-    cb = draw_cax(cax, cmap=palette.cmap)
-    cb.outline.set_visible(False)
+    cb = draw_cax(cax, cmap=palette.cmap, background=palette.background)
+    cb.outline.set_visible(True)
 
     rect = get_rect(0.5, 0.75, 0.9, 0.3, anchor='center')
     ax = fig.add_axes(rect)
